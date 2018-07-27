@@ -1,0 +1,31 @@
+body{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.flag{
+    padding: 80px 15px;
+    text-align: center;
+}
+
+.btnRight {
+    /*margin-left: 34rem;*/
+    float: right;
+}
+
+.icon-block {
+    padding: 0 15px;
+  }
+
+.icon-block .material-icons {
+      font-size: inherit;
+}
+
+.myBorder {
+    padding-right: 20px;
+}
