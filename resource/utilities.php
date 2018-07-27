@@ -24,7 +24,7 @@
      */
     function check_min_length($fields_to_check_length){
         //initialize an array to store any error message from the form
-        $form_errors = array();
+        $form_errors = array(); 
 
         foreach($fields_to_check_length as $name_of_field => $minimum_length_required){
             if(strlen(trim($_POST[$name_of_field])) < $minimum_length_required){

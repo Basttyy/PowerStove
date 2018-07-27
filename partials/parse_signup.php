@@ -7,13 +7,13 @@
         if(validate_token($_POST['token'])){
             //process form request
             //initailize an array to store all error messages
-        if($_SESSION['username']==='superadmin'){
+        if($_SESSION['usertype']==='superadmin'){
             $user_type = 'admin';
         }
-        elseif($_SESSION['username']==='admin'){
+        elseif($_SESSION['usertype']==='admin'){
             $user_type = 'agent';
         }
-        elseif($_SESSION['username']==='agent'){
+        elseif($_SESSION['usertype']==='agent'){
             $user_type = 'user';
         }
         $form_errors = array();        
@@ -157,19 +157,23 @@
         $statement->execute(array(':activated' => "1", ':id' =>$id));        
 
         if($statement->rowCount()==1){
+            $sql2 = "SELECT * FROM users WHERE id=:id AND activated='1'";
+            $statement = $db->prepare($sql2);
+            $statement->execute(array(':id' => $id, ':activated' =>"1"));
+            if($statement->rowCount()==1){
+            $username = $row['username'];
+            $email = $row['email'];
+            $usertype = $row['usertype'];
+            
             if($_SESSION['usertype']==='admin' or $_SESSION['usertype']==='agent'){
-                $sql2 = "SELECT * FROM users WHERE id=:id AND activated='1'";
-                $statement = $db->prepare($sql2);
-                $statement->execute(array(':id' => $id, ':activated' =>"1"));
-                if($statement->rowCount()==1){
-                    $username = $row['username'];
-                    $email = $row['email'];
-                    $usertype = $row['usertype'];
-                    
-                    $result = '<h2>Email Confirmed</h2>
-                        <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$username.'&usrid='.$id.'&mail='.$email.'&usrtyp='.$usertype.'&paycat=purchase">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
+                $result = '<h2>Email Confirmed</h2>
+                <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$username.'&usrid='.$id.'&mail='.$email.'&usrtyp='.$usertype.'&paycat=purchase">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
                 }
+            }else{
+                $result = '<h2>Email Confirmed</h2>
+                <p>Your email address has been verified successfully, you can now <a href="login.php">Login</a> with your email and password.</p>';
             }
+
         }else{
             $result = '<p class="lead">No changes made please contact site admin, if you have not confirmed your email before</p>';
         }

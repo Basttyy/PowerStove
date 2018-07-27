@@ -30,6 +30,7 @@
             <div class="clearfix"></div>
             <br>
             <?php
+            $token = _token();
             $adminForm = '<form action="" method="post" class="z-depth-2">
                 <h5 class="center">Personal Details</h5>
                 <div class="row">
@@ -114,7 +115,7 @@
                     </div>
                 </div>
                 <button type="submit" name="signupBtn" class="btn btn-primary orange darken-2 right">Create</button>
-                <input name="token" value="'._token().'" type="hidden">
+                <input name="token" value="'.$token.'" type="hidden">
             </form>';
             $agentForm = '<form action="" method="post" class="z-depth-2">
             <h5 class="center">Personal Details</h5>
@@ -208,7 +209,7 @@
                 </div>
             </div>
             <button type="submit" name="signupBtn" class="btn btn-primary orange darken-2 right">Create</button>
-            <input name="token" value="'._token().'" type="hidden">
+            <input name="token" value="'.$token.'" type="hidden">
         </form>';
                 $userForm = '<form action="" method="post" class="z-depth-2">
                 <h5 class="center">Personal Details</h5>
@@ -301,7 +302,7 @@
                     </div>
                 </div>
                 <button type="submit" name="signupBtn" class="btn btn-primary orange darken-2 right">Create</button>
-                <input name="token" value="'._token().'" type="hidden">
+                <input name="token" value="'.$token.'" type="hidden">
             </form>';
             if($_SESSION['usertype'] === 'super_admin'){
                 echo $adminForm;
