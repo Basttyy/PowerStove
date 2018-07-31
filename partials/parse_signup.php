@@ -17,7 +17,7 @@
             $user_type = 'user';
         }
         $form_errors = array();        
-
+  
         //form validation
         $required_fields = array('firstname', 'lastname', 'country', 'state', 'address', 'postal_code', 'phone_num', 'email', 'username', 'password');
 
@@ -157,23 +157,24 @@
         $statement->execute(array(':activated' => "1", ':id' =>$id));        
 
         if($statement->rowCount()==1){
-            $sql2 = "SELECT * FROM users WHERE id=:id AND activated='1'";
-            $statement = $db->prepare($sql2);
-            $statement->execute(array(':id' => $id, ':activated' =>"1"));
-            if($statement->rowCount()==1){
-            $username = $row['username'];
-            $email = $row['email'];
-            $usertype = $row['usertype'];
-            
             if($_SESSION['usertype']==='admin' or $_SESSION['usertype']==='agent'){
+                $sql = "SELECT * FROM users WHERE id=:id";
+                $statement = $db->prepare($sql);
+                $statement->execute(array(':id' => $id));
+                if($row = $statement->fetch()){
+                    $username = $row['username'];
+                    $email = $row['email'];
+                    $usertype = $row['user_type'];
+                }                    
+                $encode_username = base64_encode("encodeUserName{$username}");
+                $encode_email = base64_encode("encodeUserEmail{$email}");
+                $encode_usertype = base64_encode("UserTypeEncoe{$usertype}");
                 $result = '<h2>Email Confirmed</h2>
-                <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$username.'&usrid='.$id.'&mail='.$email.'&usrtyp='.$usertype.'&paycat=purchase">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
-                }
+                    <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$encode_username.'&usrid='.$encode_id.'&mail='.$encode_email.'&usrtyp='.$encode_usertype.'&payref=purchase">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
             }else{
                 $result = '<h2>Email Confirmed</h2>
                 <p>Your email address has been verified successfully, you can now <a href="login.php">Login</a> with your email and password.</p>';
             }
-
         }else{
             $result = '<p class="lead">No changes made please contact site admin, if you have not confirmed your email before</p>';
         }

@@ -14,6 +14,7 @@
         }else{
             echo '<script type="text/javascript">window.location.href = "login.php"</script>';
         }
+        
     ?>
 </div>
 </div><!-- /.container -->
@@ -23,28 +24,34 @@
             <script src="https://js.paystack.co/v1/inline.js"></script>
             <div class="row">
                 <div class="input-field col s6">
-                    <button type="button" class="btn btn-primary orange darken-2 right" name="pay_now" id="pay-now" tittle="Pay Now" onClick="saveOrderThenPayWithPaystack()">Pay Now</button>
+                    <button type="button" class="btn btn-primary orange darken-2 right" name="pay_now" id="pay-now" tittle="Pay Now" onClick="saveOrderThenPay()">Pay Now</button>
                 </div>
             </div>
         </form>
     </section>
 </div>
 <script>
+    /*function echoEmail(){
+        window.alert('<?php echo explode("encodeUserEmail", base64_decode($_GET['mail']))[1]  ;?>');
+    }*/
     var orderObj = {
-        useremail: "<? echo $_GET['email'];?>",
-        userid: "<? echo $_GET['usrid'];?>",
-        username: "<? echo $_GET['usr'];?>",
-        paycategory: "<? echo $_GET['payref'];?>",
-        amount: "1000000",
+        email: '<?php echo explode("encodeUserEmail", base64_decode($_GET['mail']))[1]  ;?>',
+        userid: '<?php echo explode("encodeuserid", base64_decode($_GET['usrid']))[1] ;?>',
+        username: '<?php echo explode("encodeUserName", base64_decode($_GET['usr']))[1] ;?>',
+        paycategory: '<?php echo $_GET['payref'];?>',
+        amount: "100000",
         orderid: "ordweb000001",
         cartid: "kd12345"
         //other params you want to save
     };
-    function saveOrderThenPayWithPaystack(){
+    function echoOrderObj(){
+        window.alert(orderObj.email);
+    }
+    function saveOrderThenPay(){
         //window.alert('trying to pay');
         //send the data to save to database using post
         window.alert('making payment');
-        var posting = $.post('/saveorder.php', orderObj);
+        var posting = $.post('/resource/saveorder.php', orderObj);
 
         posting.done(function(data){
             //check result from the attempt
@@ -68,7 +75,7 @@
             amount: orderObj.amount,
             metadata: {
                 cartid: orderObj.cartid,
-                orderid: '',
+                orderid: orderObj.orderid,
                 custom_fields: [
                     {
                         display_name: "Paid on",
