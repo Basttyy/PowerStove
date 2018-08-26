@@ -16,7 +16,7 @@
         $statement = $db->prepare($sql);
         //add data into database
         $statement->execute(array(':key' => $_decryptedKey, 'imei' => $imei));
-
+ 
         if($statement->rowCount()==1){
             //Get statistical info from stove's request
             $biomassConsumed = $_GET['biomass_consumed'];

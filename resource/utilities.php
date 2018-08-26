@@ -86,7 +86,7 @@
         try{
             $sqlQuery = "SELECT * FROM " .$table. " WHERE " .$column_name. "=:$column_name";
             $statement = $db->prepare($sqlQuery);
-            $statement->execute(array(':column_name' => $value));
+            $statement->execute(array(':'.$column_name => $value));
 
             if($row = $statement->fetch()){
                 return true;

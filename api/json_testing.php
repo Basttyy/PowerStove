@@ -11,4 +11,4 @@
 
      $jsonData = json_encode($myArray, JSON_PRETTY_PRINT);
      
-?>
+?> 

@@ -9,5 +9,5 @@
         $statement = $db->prepare($sql);
         //add data into database
         $statement->execute(array('value' => $_GET['value']));
-    }
+    } 
 ?>

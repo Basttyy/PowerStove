@@ -18,7 +18,10 @@
             <div class="clearfix"></div>
             <?php if(!isset($_SESSION['username'])): ?>
                 <p class="lead">You are not authorized  to view this page <a href="login.php">Login</a> Not yet a member? <a href="signup.php">Signup</a></p>
-            <?php else: ?> 
+            <?php else: ?>
+                <?php if(function_exists('_token')): ?>
+                    <?php $token = _token(); ?>
+                <?php endif ?>
             <h5>Change Username Email or Picture</h5>           
             <form action="" method="post" enctype="multipart/form-data">
                 <div class="form-group">
@@ -33,7 +36,7 @@
                     <label for="fileField">Avatar</label>
                     <input type="file" name="avatar" id="fileField">
                 </div> 
-                <input type="hidden" name="token" value="<?php if(function_exists('_token')) echo _token(); ?>">
+                <input type="hidden" name="token" value="<?php $token ?>">
                 <input name="hidden_id" value="<?php if(isset($id)) echo $id; ?>" type="hidden">
                 <button type="submit" name="updateProfileBtn" class="btn btn-primary right">Update Profile</button><br>
             </form><br><hr>
@@ -53,7 +56,7 @@
                     <label for="confirmPasswordField">Confirm Password</label>
                     <input type="password" name="confirm_password" placeholder="Confirm Password" class="form-control" id="confirmPasswordField">
                 </div> 
-                <input type="hidden" name="passToken" value="<?php if(function_exists('_token')) echo _token(); ?>">
+                <input type="hidden" name="passToken" value="<?php $token ?>">
                 <input name="pass_hidden_id" value="<?php if(isset($id)) echo $id; ?>" type="hidden">
                 <button type="submit" name="changePasswordBtn" class="btn btn-primary right">Change Password</button><br>
             </form><br><hr>
@@ -61,7 +64,7 @@
             <h5>Deactivate Account</h5>
             <hr>
             <form action="" method="post">
-                <input type="hidden" name="token" value="<?php if(function_exists('_token')) echo _token(); ?>">
+                <input type="hidden" name="token" value="<?php $token ?>">
                 <input name="hidden_id" value="<?php if(isset($id)) echo $id; ?>" type="hidden">
                 <button onClick="return confirm('Do you really want to deactivate your account?')" type="submit" name="deleteAccountBtn" class="btn btn-danger btn-block right">Deactivate Your Account</button><br>
             </form><br><br>

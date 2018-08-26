@@ -38,10 +38,7 @@
         email: '<?php echo explode("encodeUserEmail", base64_decode($_GET['mail']))[1]  ;?>',
         userid: '<?php echo explode("encodeuserid", base64_decode($_GET['usrid']))[1] ;?>',
         username: '<?php echo explode("encodeUserName", base64_decode($_GET['usr']))[1] ;?>',
-        paycategory: '<?php echo $_GET['payref'];?>',
-        amount: "100000",
-        orderid: "ordweb000001",
-        cartid: "kd12345"
+        paycategory: '<?php echo $_GET['payref'];?>'
         //other params you want to save
     };
     function echoOrderObj(){
@@ -51,7 +48,7 @@
         //window.alert('trying to pay');
         //send the data to save to database using post
         window.alert('making payment');
-        var posting = $.post('/resource/saveorder.php', orderObj);
+        var posting = $.post('/resource/api/saveorder.php', orderObj);
 
         posting.done(function(data){
             //check result from the attempt
@@ -59,7 +56,6 @@
         });
         posting.fail(function(data){
             window.alert('Failed to save data');
-            payWithPayStack(data);
             //and if it failed to save do this
         });
     };
@@ -93,8 +89,8 @@
                 var verifying = $.get('/verify.php?reference=' + response.reference);
                 verifying.done(function(data){
                     //give value saved in data
-                    verifyObj = json_decode(data);
-                    if(verifyObj.verified == true){
+                    dataObj = json.parse(data);
+                    if(dataObj.verified == true){
                         alert("Your payment was successfull");
                     }
                 });

@@ -30,7 +30,8 @@
             <div class="clearfix"></div>
             <br>
             <?php
-            $token = _token();
+                if(function_exists('_token'))
+                    $token = _token();
             $adminForm = '<form action="" method="post" class="z-depth-2">
                 <h5 class="center">Personal Details</h5>
                 <div class="row">

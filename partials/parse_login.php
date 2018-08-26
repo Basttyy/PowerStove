@@ -45,7 +45,7 @@
                         }
                         else{
                             prepLogin($id, $username, $remember, $usertype);
-                        }
+                        }   
                     }else{
                         $result = flashMessage("Please activate your account");
                     }
