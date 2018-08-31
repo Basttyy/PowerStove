@@ -81,7 +81,7 @@
                         <body style="background-color: #CCCCCC; color:$000; font-family: Arial, Helvetica, sans-serif; line-height:1.8em;">
                         <h2>User Authentication: Code A Secured Login System</h2>
                         <p>Dear '.$username.'<br><br>Thank you for registering, Please click the following link below to confirm your email address</p>
-                        <p><a href="https://embeddedideaz.000webhostapp.com/powerstove/activate.php?id='.$encode_id.'"> Confirm Email</a><p>
+                        <p><a href="'.getBaseUrl().'activate.php?id='.$encode_id.'"> Confirm Email</a><p>
                         <p><srong>$copy; '.Date("y").'</strong><p>
                         </body>
                         </html>';
@@ -170,7 +170,7 @@
                 $encode_email = base64_encode("encodeUserEmail{$email}");
                 $encode_usertype = base64_encode("UserTypeEncoe{$usertype}");
                 $result = '<h2>Email Confirmed</h2>
-                    <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$encode_username.'&usrid='.$encode_id.'&mail='.$encode_email.'&usrtyp='.$encode_usertype.'&payref=purchase">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
+                    <p>Your email address has been verified successfully, you can now <a href="confirm_order.php?usr='.$encode_username.'&usrid='.$encode_id.'&mail='.$encode_email.'&usrtyp='.$encode_usertype.'&payref=purch_install">Make Payment</a> to complete your registeration then <a href="login.php">Login</a> with your email and password.</p>';
             }else{
                 $result = '<h2>Email Confirmed</h2>
                 <p>Your email address has been verified successfully, you can now <a href="login.php">Login</a> with your email and password.</p>';

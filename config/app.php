@@ -4,6 +4,8 @@
 //$dsn = 'mysql:host=localhost; dbname=id4271661_powerstove_db';
 //$password = 'powerstove';
 
+//base directory
+
 return[
     'database' => [
         'driver' => 'mysql',

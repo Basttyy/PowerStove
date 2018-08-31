@@ -74,13 +74,13 @@ else if(isset($_POST['updateProfileBtn'], $_POST['token'])){
             if($avatar != null){
                 $query = "SELECT avatar FROM users WHERE id=:id";
                 $oldAvatarStatement = $db->prepare($query);
-                $oldAvatarStatement->execute(array('id:' => $hidden_id));
+                $oldAvatarStatement->execute(array(':id' => $hidden_id));
                 
                 if($rs = $oldAvatarStatement->fetch()){
                     $oldAvatar = $rs['avatar'];
                 }
                 //create sql update statement
-                $sqlUpdate = "UPDATE users SET  username =:username, email = :email avatar =:avatar WHERE  id =:id";
+                $sqlUpdate = "UPDATE users SET  username =:username, email =:email, avatar =:avatar WHERE  id =:id";
                 
                 $avatar_path = uploadAvatar($username);
                 if(!$avatar_path){
@@ -89,7 +89,7 @@ else if(isset($_POST['updateProfileBtn'], $_POST['token'])){
                 //use PDO prepared to sanitize data
                 $statement = $db->prepare($sqlUpdate);
                 //update the record in the database
-                $statement->execute(array(':username' => $username, ':email' => $email, ':avatar' => $avatar_path,    ':id' => $hidden_id));
+                $statement->execute(array(':username' => $username, ':email' => $email, ':avatar' => $avatar_path, ':id' => $hidden_id));
                 
                 //delete old avatar/profile_pic
                 if(isset($oldAvatar)){

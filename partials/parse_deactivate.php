@@ -25,13 +25,14 @@ if(isset($_POST['deleteAccountBtn'], $_POST['token'])){
                                                 VAlUES(:id, now())");
                     $insertRecord->execute(array(':id' => $user_id));
                     if($insertRecord->rowCount()===1){
+                        $url = getBaseUrl();
                         //STEP4 notify the user via email and display alert
                         //prepare mail body
                         $mail_body = '<html>
                         <body style="background-color: #CCCCCC; color:$000; font-family: Arial, Helvetica, sans-serif; line-height:1.8em;">
                         <h2>User Authentication: Code A Secured Login System</h2>
                         <p>Dear '.$username.'<br><br>You have requested to deactivate your account, your account information will be kept for 14 days, if you wish to continue using the account login within the next 14 days to reactivate your account or it will be permanently deleted.</p>
-                        <p><a href="https://embeddedideaz.000webhostapp.com/powerstove/login.php"> Sign In</a><p>
+                        <p><a href="'.getBaseUrl().'login.php"> Sign In</a><p>
                         <p><srong>$copy;2018 Anatel Systems</strong><p>
                         </body>
                         </html>';

@@ -48,10 +48,11 @@
         //window.alert('trying to pay');
         //send the data to save to database using post
         window.alert('making payment');
-        var posting = $.post('/resource/api/saveorder.php', orderObj);
+        var posting = $.post('resource/saveorder.php', orderObj);
 
         posting.done(function(data){
             //check result from the attempt
+            window.alert(data);
             payWithPayStack(data);
         });
         posting.fail(function(data){
@@ -60,7 +61,8 @@
         });
     };
     function payWithPayStack(data){
-        window.alert('making payment');
+        window.alert(data);
+        dataObj = JSON.parse(data);
         var handler = PaystackPop.setup({            
             //This assumes you already created a constant named
             //PAYSTACK_PUBLIC_KEY with your public key from the
@@ -68,10 +70,10 @@
             //instead of creating the constant
             key: 'pk_test_6a23d42a2ac9cd58a44a1d32c3e9a255d71b6418',
             email: orderObj.email,
-            amount: orderObj.amount,
+            amount: dataObj.amount,
             metadata: {
-                cartid: orderObj.cartid,
-                orderid: orderObj.orderid,
+                cartid: dataObj.cartid,
+                orderid: dataObj.orderid,
                 custom_fields: [
                     {
                         display_name: "Paid on",
@@ -86,7 +88,7 @@
             },
             callback: function(){
                 //post to server to verify transaction before giving value
-                var verifying = $.get('/verify.php?reference=' + response.reference);
+                var verifying = $.get('resource/verify.php?reference=' + response.reference);
                 verifying.done(function(data){
                     //give value saved in data
                     dataObj = json.parse(data);
