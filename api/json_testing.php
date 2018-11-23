@@ -10,5 +10,11 @@
      );
 
      $jsonData = json_encode($myArray, JSON_PRETTY_PRINT);
-     
+     $plainText = "This is My text this";
+
+     $encrypted = encrypt_decrypt('encrypt', $plainText);
+
+     echo 'plaintext is:'.$plainText;
+     echo 'encrypted form is:'.$encrypted;
+     echo 'decrypted form is:'.encrypt_decrypt('decrypt', $encrypted);
 ?> 

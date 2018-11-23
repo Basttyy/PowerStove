@@ -14,7 +14,7 @@
         $sql = "SELECT * FROM stoves WHERE key =:key AND imei =:iemi";
         //use pdo to sanitize data
         $statement = $db->prepare($sql);
-        //add data into database
+        //get the stove data
         $statement->execute(array(':key' => $_decryptedKey, 'imei' => $imei));
  
         if($statement->rowCount()==1){

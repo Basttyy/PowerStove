@@ -11,7 +11,7 @@
             //initialize an array to store any error message
         $form_errors = array();
         //form validation
-        $required_fields = array('email', 'reset_token','new_password', 'confirm_password');
+        $required_fields = array('email', 'resetToken','new_password', 'confirm_password');
         //call the function to check empty fields and merge the return data into form_error array
         $form_errors = array_merge($form_errors, check_empty_fields($required_fields));
         //fields that require checking for minimum length
@@ -23,7 +23,7 @@
         if(empty($form_errors)){
             //collect form data and store in variables
             $email = $_POST['email'];
-            $reset_token = $_POST['reset_token'];
+            $reset_token = $_POST['resetToken'];
             $password1 = $_POST['new_password'];
             $password2 = $_POST['confirm_password'];
             //check if new password and confirm password are the same
@@ -31,26 +31,27 @@
                 $result = flashMessage("New password and confirm password does not match");
             }else{
                 try{
+                    $email = explode("EncodeUserEmail", base64_decode($email))[1];
                     //validate email and token
                     $query = "SELECT * FROM password_resets WHERE email=:email";
                     $query_statement = $db->prepare($query);
                     $query_statement->execute(array(':email' =>$email));
                     $isValid = true;
 
-                    if($rows = $query_statement-fetch()){
+                    if($rows = $query_statement->fetch()){
                         //email found
                         $stored_token = $rows['token'];
                         $expire_time = $rows['expire_time'];
 
                         if($stored_token != $reset_token){
                             $isValid = false;
-                            $result = flashMessage("You have entered an invalid token");
+                            $result = flashMessage("Your token is corrupt, please request a new one...");
                         }
                         if($expire_time < date('Y-m-d H-i-s')){
                             $isValid = false;
                             $result = flashMessage("Sorry! this reset token has expired, please request a new one");
                             //delete token
-                            $db->exec("DELETE FROM password_resets WHERE email=$email AND token =$stored_token");
+                            $db->exec("DELETE FROM password_resets WHERE email=$email LIMIT 1");
                         }
                     }else{
                         $isValid = false;
@@ -65,7 +66,7 @@
                     //execute the query
                     $statement->execute(array(':email' => $email));
                     //check if record exists
-                    if($rs = $statement-fetch()){
+                    if($rs = $statement->fetch()){
                         //hash the password
                         $hashed_password = password_hash($password1, PASSWORD_DEFAULT);
                         $id = $rs['id'];
@@ -79,7 +80,8 @@
                         
                         if($statement->rowCount()==1){
                             //delete token
-                            $db->exec("DELETE FROM password_resets WHERE email=$email AND token =$stored_token"); 
+                            $deleteqry = $db->prepare("DELETE FROM password_resets WHERE email =:email AND token =:token LIMIT 1"); 
+                            $deleteqry->execute(array(':email' => $email, ':token' => $reset_token));
                         }
                         $result = "<script type=\"text/javascript\">
                     swal({
@@ -95,7 +97,7 @@
                         $result = "<script type=\"text/javascript\">
                     swal({
                         title: \"Ouch...\",
-                        text: \"The email address provided does not exist in our database, please try again!\",
+                        text: \"The email address provided {$email} does not exist in our database, please try again!\",
                         type: \"error\",
                         showCancelButton: false,
                         confirmButtonText: \"Retry!\"
@@ -151,12 +153,12 @@
                     $email = $rs['email'];
                     //for Option1
                     //$user_id = $rs['id'];
-                    //$encode_id = base64_encode("encodeuserid{$user_id}");
+                    $encode_email = base64_encode("EncodeUserEmail{$email}");
 
                     //create and store token
                     $expire_time = date('Y-m-d H:i:s', strtotime('1 hour'));
                     $random_string = base64_encode(openssl_random_pseudo_bytes(10));
-                    echo $reset_token = strtoupper(pre_replace('/[^A-Za-z0-9\-]/', '', $random_string));
+                    $reset_token = strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', $random_string));
 
                     $insertToken = "INSERT INTO password_resets (email, token, expire_time)
                                     VALUES (:email, :token, :expire_time)";
@@ -166,7 +168,7 @@
                         ':token' => $reset_token,
                         ':expire_time' => $expire_time
                     ]);
-
+                    
                     //prepare email body content Option 1 by encrypting user id
                     /*$mail_body = '<html>
                         <body style="background-color: #CCCCCC; color:$000; font-family: Arial, Helvetica, sans-serif; line-height:1.8em;">
@@ -180,14 +182,13 @@
                     //Prepare email content Option2 by sending encrypted random token
                     $mail_body = '<html>
                         <body style="background-color: #CCCCCC; color:$000; font-family: Arial, Helvetica, sans-serif; line-height:1.8em;">
-                        <h2>User Authentication: Code A Secured Login System</h2>
+                        <h2>Password Reset: Code A Secured Login System</h2>
                         <p>Dear '.$username.'<br><br>To reset your login password, Copy the token below and click on the reset password link then paste the token in the token field of the form:
                         <br><br>
-                        Token: '.$reset_token.' <br>
                         This token will expire after 1 hour
                         </p>
-                        <p><a href="https://embeddedideaz.000webhostapp.com/powerstove/forgot_password.php"> Reset Password</a><p>
-                        <p><srong>$copy;'.date('Y').' Anatel Systems</strong><p>
+                        <p><a href="'.getBaseUrl().'forgot_password.php?email='.$encode_email.'&token='.$reset_token.'"> Reset Password</a><p>
+                        <p><srong>$copy;'.date('Y').' Peachwater Consults</strong><p>
                         </body>
                         </html>';
                     //Always set content type when sending html email

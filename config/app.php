@@ -10,7 +10,7 @@ return[
     'database' => [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'dbname' => 'learningphp',
+        'dbname' => 'powerstove',
         'username' => 'root',
         'password' => '123456'
     ],

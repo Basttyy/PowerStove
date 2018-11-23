@@ -259,4 +259,49 @@
         }
         return $pageURL;
     }
+    function encrypt_decrypt($action, $string){
+        $output = false;
+
+        $encryptMethod = "AES-128-CBC";
+        $secretKey = "This is my key  ";
+        $secret_iv = '0000000000000000';
+        //Hash
+        $key = hash('sha256', $secret_iv);
+        //iv - encrypt method AES-256-CBC expects 16bytes - else you will get a warning
+        $iv = substr(hash('sha256', $secret_iv), 0, 16);
+        
+        if($action == 'encrypt'){
+            $output = openssl_encrypt($string, $encryptMethod, $key, 0, $iv);
+            $output = base64_encode($output);
+        }else if($action == 'decrypt'){
+            $output = base64_decode(openssl_decrypt(base64_decode($string), $encryptMethod, $secretKey, 0, $secret_iv));
+        }
+        return $output;
+    }
+    function encrypt($plaintext, $password){
+        $method = "AES-256-CBC";
+        $key = hash('sha256', $password, true);
+        $iv = openssl_random_pseudo_bytes(16);
+
+        $cyphertext = openssl_encrypt($plaintext, $method, $key, OPENSSL_RAW_DATA, $iv);
+        $hash = hash_hmac('sha256', $cyphertext, $key, true);
+        return $iv.$hash.$cyphertext;
+    }
+    function decrypt($ivHashCyphertext, $password){
+        $method = "AES-256-CBC";
+        $iv = substr($ivHashCyphertext, 0, 16);
+        $hash = substr($ivHashCyphertext, 16, 32);
+        $cyphertext = substr($ivHashCyphertext, 48);
+        $key = hash('sha256', $password, true);
+
+        if(hash_hmac('sha256', $cyphertext, $key, true) !== $hash) return null;
+        return openssl_decrypt($cyphertext, $method, $key, OPENSSL_RAW_DATA, $iv);
+    }
+    function create_byte_array($string){
+        $array = array();
+        foreach(str_split($string) as $char){
+            array_push($array, sprintf("%02X", ord($char)));
+        }
+        return implode(' ', $array);
+    }
 ?>

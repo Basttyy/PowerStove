@@ -33,7 +33,7 @@ try{
 
 //Auto delete non activated accounts after 3days
 try{
-    $sqlQuery = $db->query("SELECT id, username FROM users WHERE join_date <= CURRENT_DATE - INTERVAL 3 DAY AND                                activated = '0'");
+    $sqlQuery = $db->query("SELECT id, username FROM users WHERE join_date <= CURRENT_DATE - INTERVAL 3 DAY AND activated = '0'");
 
     while($rs = $sqlQuery->fetch()){
         //get record from user table

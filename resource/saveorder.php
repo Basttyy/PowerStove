@@ -28,9 +28,10 @@
             $query = $db->prepare("SELECT (id) FROM payments ORDER BY id DESC LIMIT 1");
             $query->execute();
             if($row = $query->fetch()){
-                $count = $row['id'];
-                $count += 1;
+                $count = $row['id'];                
             } 
+            $count += 1;
+                
             $sql = $db->prepare("INSERT INTO payments(user_id, trans_id, order_type, pay_category, amount, order_date)
                                 VALUES(:id, :trans_id, :order_type, :pay_category, :amount, now())");
             $sql->execute(array(':id'=>$userid, ':trans_id'=>'trans'.$count, ':order_type'=>'installment', ':pay_category'=>$paycategory, ':amount'=>$amount));

@@ -22,7 +22,7 @@
                 <?php if(function_exists('_token')): ?>
                     <?php $token = _token(); ?>
                 <?php endif ?>
-            <h5>Change Username Email or Picture</h5>           
+            <h5>Change Username Email or Picture</h5>
             <form action="" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="emailField">Email</label>
